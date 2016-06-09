@@ -18,7 +18,7 @@
 4. 捐赠意向达成双方交接时，由接收方扫描所接收教材ISBN码，删除后端系统中相应的捐赠方待捐赠教材记录
 
 ## 系统功能演示与公众号
-markdown中不便演示，您可以[点此查看](https://github.com/mullingnull/zhiqiunode/系统功能演示.png)PNG图片格式系统功能演示文档
+markdown中不便演示，您可以[点此查看](https://github.com/mullingnull/zhiqiunode/blob/master/系统功能演示.png)PNG图片格式系统功能演示文档
 
 ![小牙签-微信公众号](http://o7650r1ld.bkt.clouddn.com/images/qrcode_yaqian_large.jpg)
 
