@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://www.springframework.org/schema/tx	http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+	   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+       ">
+
+    <!-- 扫描注解Bean -->
+    <context:component-scan base-package="online.yaqian.zhiqiunode">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+	
+	<context:property-placeholder location="classpath:jdbc.properties" />
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${jdbc.url}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="50" />
+		<property name="minIdle" value="1" />
+		<property name="maxWait" value="60000" />
+		
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+		
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="validationQuery" value="${jdbc.validationsql}" />
+		
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="50" />
+		
+		<property name="filters" value="stat,wall,config" />
+		<property name="connectionProperties" value="config.decrypt=true" />
+	</bean>
+	
+
+	 <!-- 配置druid监控spring-->
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor" />
+    
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">
+        <property name="patterns">
+            <list>
+                <value>online.yaqian.zhiqiunode.service.*</value>
+				<value>online.yaqian.zhiqiunode.dao.*</value>
+				<value>online.yaqian.zhiqiunode.wechat.service.*</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan">
+			<list>
+				<value>online.yaqian.zhiqiunode.model</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+    <!-- 使用AspectJ方式配置AOP -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut-ref="druid-stat-pointcut"
+			advice-ref="druid-stat-interceptor" /><!-- druid 监控spring -->
+		<aop:advisor pointcut="execution(* online.yaqian.zhiqiunode..*.*(..))"
+			advice-ref="transactionAdvice" /> <!-- 配置哪些类的哪些方法参与事务 -->
+	</aop:config>
+
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<!-- 配置事务传播特性 -->
+	<tx:advice id="transactionAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="do*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="merge*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="remove*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="put*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="use*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			
+			<tx:method name="load*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="search*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="count*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="list*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+    
+	
+	<!-- Enables the Spring Task @Scheduled programming model -->    
+    <task:annotation-driven />
+    <context:annotation-config/>  
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>  
+    <context:component-scan base-package="online.yaqian.service,online.yaqian.wechat.service"/> 
+	
+
+    
+</beans>
