@@ -2,13 +2,13 @@
 
 小牙签，取“牙签万轴，予取予求”之意，应该不算掉书袋吧
 
-“牙签万轴裹红绡,玉粲书同付火烧”，李后主一千多年一句诗，而今毕业3毛一斤卖掉四年积攒的教材时，读来还是有所感触的。能做的有限，但是我尽力而为。
+“牙签万轴裹红绡，玉粲书同付火烧”，李后主一千多年一句诗，而今毕业3毛一斤卖掉四年积攒的教材时，读来还是有所感触的。能做的有限，但是我尽力而为。
 
 项目的目标在于为在校大学生提供一个教材再利用信息流通平台，解决因信息不对称带来的（巨大？待考证）教材浪费问题。
 
 这里给出的是自己写的浙理节点（zhiqiunode）的实现，系统以微信订阅号+WebAPP形式运行，欢迎fork到自己学校，如果感兴趣欢迎使用其他语言实现。如果你也和我一样觉得本项目工程Bug遍地走，欢迎和我一起完善代码，如对本项目工程有更多想法，欢迎您的重构或重新开发。
 
-### **一言以蔽之：一个教材信息流通平台,换换书,交交朋友，但尽人事，莫许前程**
+### **一言以蔽之：一个教材信息流通平台，换换书，交交朋友，但尽人事，莫许前程**
 
 ### 系统核心逻辑简介：
 
@@ -27,7 +27,7 @@ markdown中不便演示，您可以[点此查看](https://github.com/mullingnull
 ## 系统技术实现
 
 ### 系统细节
-* [Spring Framwork](https://github.com/spring-projects/spring-framework) 4.2,含Spring MVC,[Spring Security](https://github.com/spring-projects/spring-security)
+* [Spring Framwork](https://github.com/spring-projects/spring-framework) 4.2，含Spring MVC，[Spring Security](https://github.com/spring-projects/spring-security)
 * [Nimbus JOSE+JWT](https://bitbucket.org/connect2id/nimbus-jose-jwt/) 4.12
 * [Hibernate ORM](https://github.com/hibernate/hibernate-orm) 5.1
 * [Druid 连接池](https://github.com/alibaba/druid)，[fastjson](https://github.com/alibaba/fastjson)
@@ -38,9 +38,9 @@ markdown中不便演示，您可以[点此查看](https://github.com/mullingnull
 ### 后端系统主要功能与相应实现
 * 响应用户通过微信发送的消息、事件推送(MessageReception.java)
 * 定时获取、更新微信AccessToken、JsApiTicket(TicketService.java)
-* 用户HTTP请求拦截、身份验证(JWTAuthenticationFilter.java,JWTAuthenticationProvider.java,JWTAuthenticationToken.java等)
+* 用户HTTP请求拦截、身份验证(JWTAuthenticationFilter.java，JWTAuthenticationProvider.java，JWTAuthenticationToken.java等)
 * 用户登陆，未注册用户返回注册页面、已注册用户返回主页面(ViewDispatcher.java)
-* 用户个人信息更新、心愿单维护(RestfulUserAPIs.java, RestfulWishAPIs.java)
+* 用户个人信息更新、心愿单维护(RestfulUserAPIs.java， RestfulWishAPIs.java)
 * 检索待捐赠书籍记录(RestfulResourceAPIs.java)
 * 用户添加、变更待捐赠书籍信息(RestfulMineAPIs.java)
 * 达成捐赠、删除相关记录、生成成交信息请求(RestfulOrderAPIs.java)
@@ -105,10 +105,10 @@ src/main/resources/log4j.properties中配置日志输出目录、等级等
 
 不过囿于现有资源等，目前项目WEB服务器未能使用HTTPS协议，在用户访问过程中有被截取JWT的风险，HTTP明文传输亦存在通信内容泄露的风险
 
-将来条件允许会尽快补足,如实际应用时条件不具备，将缩短JWT生命期（由当前的1个月缩减到2小时）。牺牲便捷性换取安全性。我尽力 XD
+将来条件允许会尽快补足，如实际应用时条件不具备，将缩短JWT生命期（由当前的1个月缩减到2小时）。牺牲便捷性换取安全性。我尽力 XD
 
 ## 许可证
-[BSD 3-clause "New" or "Revised" License](https://opensource.org/licenses/BSD-3-Clause "The BSD 3-Clause License"),您可使用本项目源码于各种用途，相信您能在条件允许的范围内通过反馈Bug等协助项目的完善
+[BSD 3-clause "New" or "Revised" License](https://opensource.org/licenses/BSD-3-Clause "The BSD 3-Clause License")，您可使用本项目源码于各种用途，相信您能在条件允许的范围内通过反馈Bug等协助项目的完善
 
 ## 其他
 * 感谢开源项目的开发者、贡献者，致敬开源精神
